@@ -47,23 +47,22 @@ async def classify_uploaded_file(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     text = transformation.extract_text(file.filename, file_path)
+    
     lang = language.pred(text)
     if lang is not None:
-        if lang["label"] == "en":
-            topic = doc_classifier.pred(text)
-            if topic is not None:
-                result = {
-                    "label": topic["labels"][0],
-                    "score": topic["scores"][0],
+        topic = doc_classifier.pred(text)
+        if lang == "en":
+            
+            
+            result = {
+                    "label": topic,
                     "language": "en"
                 }
-            else:
-                result = {"exception": 4, "type": "classifier"}
         else:
             result = {
-                "exception": 3,
                 "type": "not english",
-                "language": lang["label"]
+                "language": lang,
+                "label": topic
             }
     else:
         result = {"exception": 2, "type": "language detection"}
