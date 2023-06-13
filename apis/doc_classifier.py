@@ -1,37 +1,29 @@
-import requests
-from . import config, text_processing
-import re
-from gradio_client import Client
-
-
-
-
-
+from . import text_processing
 import json
+from gradio_client import Client
+from . import config
 
-
+client = Client("https://ayoubchlin-ayoubchlin-stable-bart-mnli-cnn.hf.space/", hf_token='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')
 
 
 def pred(text):
     try:
-        client = Client("https://ayoubchlin-ayoubchlin-bart-mnli-cnn-news.hf.space/" ,hf_token=config.huggingface_key)
-        labels  = ",".join(config.labels)
-        print(labels)
-        text = text_processing.preprocess_text(text)
+        labels = ", ".join(config.labels)  # Assuming `config.labels` is imported from the `config` module
+
+        preprocessed_text = text_processing.preprocess_text(text)
         result = client.predict(
-                text,
-				labels,	# str representing input in 'Possible class names (comma-separated)' Textbox component
-				False,	# bool representing input in 'Allow multiple true classes' Checkbox component
-				api_name="/predict"
+            preprocessed_text,
+            labels,
+            api_name="/predict"
         )
-        # Open the file in read mode
+        
         with open(result, 'r') as file:
-            # Read the contents of the file
             json_data = json.load(file)
+        
         print(json_data)
         return json_data["label"]
-        
+
     except Exception as e:
-        # Handle any other exceptions
+        # Handle specific exceptions and provide appropriate responses or error messages
         print(f"Exception: {e}")
         return None

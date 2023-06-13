@@ -12,7 +12,7 @@ def preprocess_text(text):
     text = re.sub(r'\s+', ' ', text)
     
     # Remove non-alphanumeric characters except for certain special characters
-    text = re.sub(r'[^\w\s$€%.,-]|(?<=\d)[.,](?=\d)|(?<=\d)[/](?=\d)', ' ', text).lower()
+    text = re.sub(r'[^\w\s$€%.,-/]|(?<=\d)[.,/](?=\d)', ' ', text).lower()
     
     # Remove leading and trailing whitespace
     text = text.strip()
