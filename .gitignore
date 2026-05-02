@@ -1,2 +1,6 @@
 .space
-/apis/config.py
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+static/uploads/

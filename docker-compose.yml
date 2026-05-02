@@ -1,0 +1,25 @@
+services:
+  classifier-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: classifier-general-api
+    environment:
+      APP_NAME: ${APP_NAME:-Classifier General API}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-false}
+      STATIC_DIR: ${STATIC_DIR:-static}
+      UPLOAD_SUBDIR: ${UPLOAD_SUBDIR:-uploads}
+      CLASSIFIER_MODEL: ${CLASSIFIER_MODEL:-AyoubChLin/bert-base-uncased-zeroshot-nli}
+      ENABLE_MODEL_QUANTIZATION: ${ENABLE_MODEL_QUANTIZATION:-true}
+      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN:-}
+      DEFAULT_LABELS_CSV: ${DEFAULT_LABELS_CSV:-news,sport,finance,politics}
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./static:/app/static
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health/liveness"]
+      interval: 10s
+      timeout: 4s
+      retries: 6
